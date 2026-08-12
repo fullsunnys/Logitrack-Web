@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogiTrack | Sistem Manajemen Inventaris & Logistik Kantor</title>
+  <meta name="description"
+    content="Sistem Manajemen Inventaris & Arsip Logistik Internal Kantor untuk Peminjaman, Pengembalian, dan Pelaporan." />
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <!-- Lucide Icons CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide/dist/umd/lucide.min.js"></script>
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body class="light-theme">
+  <!-- Loader Screen -->
+  <div id="app-loader" class="app-loader">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Login Page Overlay -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-card-wrapper">
+      <div class="login-card">
+        <div class="login-header">
+          <h2>Logistic Tracker Systems</h2>
+          <p>Sistem Manajemen Inventaris & Logistik Internal</p>
+        </div>
+
+        <form id="login-form">
+          <div class="form-group-login">
+            <label for="login-username">Nama Pengguna</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="user"></i>
+              <input type="text" id="login-username" placeholder="Masukkan username" required />
+            </div>
+          </div>
+
+          <div class="form-group-login">
+            <label for="login-password">Kata Sandi</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="lock"></i>
+              <input type="password" id="login-password" placeholder="Masukkan password" required />
+              <button type="button" id="toggle-password-btn" class="toggle-password-btn">
+                <i data-lucide="eye" id="toggle-password-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="login-options">
+            <label class="checkbox-container">
+              <input type="checkbox" id="login-remember" />
+              <span class="checkmark"></span>
+              Ingat Saya
+            </label>
+            <a href="#" id="btn-forgot-password" class="forgot-link">Lupa Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">
+            <span>Masuk Ke Sistem</span>
+            <i data-lucide="log-in"></i>
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <p>&copy; 2026 LogiTrack Internal. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Wrapper (Hidden before login) -->
+  <div id="app-wrapper" class="app-wrapper hidden">
+    <!-- Sidebar Navigation -->
+    <aside id="app-sidebar" class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <i data-lucide="box" class="logo-icon"></i>
+          <span class="logo-text">LogiTrack</span>
+        </div>
+        <button id="sidebar-close-btn" class="sidebar-close-btn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#dashboard" class="menu-item active" data-view="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#data-arsip" class="menu-item" data-view="data-arsip">
+          <i data-lucide="archive"></i>
+          <span>Data Arsip</span>
+        </a>
+        <a href="#tambah-arsip" class="menu-item" data-view="tambah-arsip">
+          <i data-lucide="plus-circle"></i>
+          <span>Tambah Arsip</span>
+        </a>
+        <a href="#cari-arsip" class="menu-item" data-view="cari-arsip">
+          <i data-lucide="search"></i>
+          <span>Cari Arsip</span>
+        </a>
+        <a href="#peminjaman" class="menu-item" data-view="peminjaman">
+          <i data-lucide="arrow-up-right"></i>
+          <span>Peminjaman</span>
+        </a>
+        <a href="#pengembalian" class="menu-item" data-view="pengembalian">
+          <i data-lucide="arrow-down-left"></i>
+          <span>Pengembalian</span>
+        </a>
+        <a href="#riwayat-transaksi" class="menu-item" data-view="riwayat-transaksi">
+          <i data-lucide="history"></i>
+          <span>Riwayat Transaksi</span>
+        </a>
+        <a href="#audit-logs" class="menu-item" data-view="audit-logs">
+          <i data-lucide="shield-alert"></i>
+          <span>Log Aktivitas</span>
+        </a>
+        <a href="#laporan" class="menu-item" data-view="laporan">
+          <i data-lucide="file-bar-chart"></i>
+          <span>Laporan</span>
+        </a>
+        <a href="#pengaturan" class="menu-item" data-view="pengaturan">
+          <i data-lucide="settings"></i>
+          <span>Pengaturan</span>
+        </a>
+        <div class="sidebar-divider"></div>
+        <a href="#logout" id="btn-sidebar-logout" class="menu-item menu-item-logout">
+          <i data-lucide="log-out"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer User Profile Summary -->
+      <div class="sidebar-footer">
+        <div class="user-avatar-box">
+          <img id="sidebar-user-avatar"
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+            alt="Avatar" />
+        </div>
+        <div class="user-info-box">
+          <h4 id="sidebar-user-name">Administrator</h4>
+          <p id="sidebar-user-role">Super Admin</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Layout Section -->
+    <div class="main-layout">
+      <!-- Top Navbar Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button id="sidebar-toggle-btn" class="sidebar-toggle-btn">
+            <i data-lucide="menu"></i>
+          </button>
+          <!-- Breadcrumbs -->
+          <nav class="breadcrumb-nav">
+            <span class="breadcrumb-item">LogiTrack</span>
+            <i data-lucide="chevron-right" class="breadcrumb-separator"></i>
+            <span id="breadcrumb-current" class="breadcrumb-item active">Dashboard</span>
+          </nav>
+        </div>
+
+        <div class="header-right">
+          <!-- Theme Toggle -->
+          <button id="theme-toggle-btn" class="header-action-btn" title="Ganti Tema">
+            <i data-lucide="moon" class="theme-icon-dark"></i>
+            <i data-lucide="sun" class="theme-icon-light hidden"></i>
+          </button>
+
+          <!-- Notifications Dropdown -->
+          <div class="notification-wrapper">
+            <button id="notification-toggle-btn" class="header-action-btn badge-btn">
+              <i data-lucide="bell"></i>
+              <span id="notification-count" class="badge bg-danger hidden">0</span>
+            </button>
+
+            <!-- Dropdown Box -->
+            <div id="notification-dropdown" class="notification-dropdown hidden">
+              <div class="dropdown-header">
+                <h3>Notifikasi Sistem</h3>
+                <button id="btn-mark-notifications-read" class="btn-text">Tandai Semua Dibaca</button>
+              </div>
+              <div id="notification-list" class="notification-list">
+                <!-- Injected via JS -->
+                <div class="empty-notifications">
+                  <i data-lucide="bell-off"></i>
+                  <p>Tidak ada notifikasi baru</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button id="profile-toggle-btn" class="profile-header-btn">
+              <img id="header-user-avatar"
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                alt="Profile" />
+              <span id="header-user-name" class="header-username">Admin Logistik</span>
+              <i data-lucide="chevron-down" class="profile-arrow"></i>
+            </button>
+
+            <div id="profile-dropdown" class="profile-dropdown hidden">
+              <div class="dropdown-user-info">
+                <h4 id="drop-user-name">Administrator</h4>
+                <p id="drop-user-email">admin@logitrack.go.id</p>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="#pengaturan" class="profile-dropdown-item" data-view="pengaturan">
+                <i data-lucide="user-cog"></i>
+                <span>Profil Saya</span>
+              </a>
+              <a href="#pengaturan" class="profile-dropdown-item" data-view="pengaturan">
+                <i data-lucide="shield"></i>
+                <span>Keamanan</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="#logout" id="btn-profile-logout" class="profile-dropdown-item text-danger">
+                <i data-lucide="log-out"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Dynamic Viewport -->
+      <main id="app-viewport" class="app-viewport">
+        <!-- Dynamic Content Loaded Here -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Global Toast Notifications Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Confirm Modal Overlay -->
+  <div id="confirm-modal" class="modal-overlay hidden">
+    <div class="modal-card modal-confirm animate-scale">
+      <div class="modal-icon-wrapper danger" id="confirm-modal-icon-container">
+        <i data-lucide="alert-triangle" id="confirm-modal-icon"></i>
+      </div>
+      <h3 id="confirm-modal-title">Konfirmasi Aksi</h3>
+      <p id="confirm-modal-message">Apakah Anda yakin ingin melakukan tindakan ini? Tindakan ini tidak dapat dibatalkan.
+      </p>
+      <div class="modal-actions">
+        <button id="confirm-modal-cancel" class="btn btn-secondary">Batal</button>
+        <button id="confirm-modal-confirm" class="btn btn-danger">Ya, Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Barang Modal Overlay -->
+  <div id="detail-modal" class="modal-overlay hidden">
+    <div class="modal-card modal-large animate-scale" style="max-width: 950px; width: 95%; max-height: 90vh; display: flex; flex-direction: column; padding: 24px;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+        <h3 id="detail-modal-title" style="margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--text-main);">Detail Barang</h3>
+        <button id="detail-modal-close" class="modal-close-btn" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.5rem; line-height: 1; padding: 4px;">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div id="detail-modal-body" style="overflow-y: auto; flex: 1; padding-right: 4px;">
+        <!-- Injected via JS -->
+      </div>
+      <div class="modal-actions" style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: flex-end;">
+        <button id="detail-modal-close-btn" class="btn btn-secondary">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Label QR Code Modal -->
+  <div id="qr-modal" class="modal-overlay hidden">
+    <div class="modal-card modal-qr animate-scale">
+      <div class="modal-header">
+        <h3>Cetak Label Aset & QR Code</h3>
+        <button id="qr-modal-close" class="modal-close-btn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="print-label-area" class="print-label-area">
+          <div class="print-label-card">
+            <div class="print-label-left">
+              <h4 id="print-item-name">ASSET NAME</h4>
+              <p id="print-item-code">ARS-2026-0001</p>
+              <div class="barcode-container">
+                <svg id="print-barcode"></svg>
+              </div>
+            </div>
+            <div class="print-label-right">
+              <canvas id="print-qrcode"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="label-info">
+          <p>Label ini berisi QR Code, Barcode, Kode Arsip, dan nama barang untuk mempermudah identifikasi inventaris
+            fisik.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="qr-modal-cancel" class="btn btn-secondary">Batal</button>
+        <button id="qr-modal-print" class="btn btn-primary">
+          <i data-lucide="printer"></i>
+          <span>Cetak Label</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entry Point JS -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "arsip-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.6.0",
+    "chart.js": "^4.4.1",
+    "jsbarcode": "^3.11.6",
+    "qrcode": "^1.5.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "vite": "^5.0.12"
+  }
+}
