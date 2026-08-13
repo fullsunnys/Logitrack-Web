@@ -16,7 +16,7 @@
   <!-- Lucide Icons CDN -->
   <script src="https://cdn.jsdelivr.net/npm/lucide/dist/umd/lucide.min.js"></script>
   <!-- Core Stylesheet -->
-  <script type="module" crossorigin src="/assets/index-D212qLfe.js"></script>
+  <script type="module" crossorigin src="/assets/index-D5B2KYqr.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-BzybD_U7.css">
 </head>
 
@@ -245,7 +245,10 @@
 
   <!-- Confirm Modal Overlay -->
   <div id="confirm-modal" class="modal-overlay hidden">
-    <div class="modal-card modal-confirm animate-scale">
+    <div class="modal-card modal-confirm animate-scale" style="position:relative;">
+      <button id="confirm-modal-close" class="modal-close-btn" style="position:absolute; top:16px; right:16px; background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1.25rem; line-height:1; display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="x"></i>
+      </button>
       <div class="modal-icon-wrapper danger" id="confirm-modal-icon-container">
         <i data-lucide="alert-triangle" id="confirm-modal-icon"></i>
       </div>
@@ -312,6 +315,17 @@
           <i data-lucide="printer"></i>
           <span>Cetak Label</span>
         </button>
+      </div>
+    </div>
+  <!-- Image Viewer Lightbox Modal -->
+  <div id="image-preview-modal" class="modal-overlay hidden" style="z-index: 99999;">
+    <div class="modal-card animate-scale" style="max-width: 90vw; max-height: 90vh; width: auto; background: var(--bg-card); padding: 16px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; position: relative;">
+      <button id="image-preview-close" class="modal-close-btn" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
+        <i data-lucide="x" style="width:20px; height:20px;"></i>
+      </button>
+      <h4 id="image-preview-title" style="margin: 0 0 12px 0; font-size: 1rem; color: var(--text-main); font-weight: 600; text-align: center; padding-right: 36px;">Preview Foto Bukti</h4>
+      <div style="max-width: 85vw; max-height: 75vh; overflow: hidden; display: flex; justify-content: center; align-items: center; border-radius: 8px; background: #0b0f19;">
+        <img id="image-preview-img" src="" alt="Bukti Foto" style="max-width: 100%; max-height: 75vh; object-fit: contain; display: block;" />
       </div>
     </div>
   </div>

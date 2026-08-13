@@ -1125,22 +1125,31 @@ export const state = {
       });
     }
 
-    // Check overdue transactions
-    if (settings.notifications.overdue) {
-      const transactions = this.getTransactions();
-      transactions.forEach(t => {
-        if ((t.status === "Dipinjam" || t.status === "Terlambat") && t.lateDays > 0) {
+    // Check active borrowings and overdue transactions
+    const transactions = this.getTransactions();
+    transactions.forEach(t => {
+      if (t.status === "Dipinjam" || t.status === "Terlambat") {
+        if (t.lateDays > 0 && settings.notifications.overdue) {
           notifs.push({
             id: `NOT-AUTO-LATE-${count++}`,
             title: "Peminjaman Terlambat Terdeteksi",
             message: `Peminjaman ${t.id} oleh ${t.borrowerName} terlambat selama ${t.lateDays} hari.`,
             type: "danger",
             read: false,
-            date: new Date().toISOString()
+            date: t.borrowDate || new Date().toISOString()
+          });
+        } else {
+          notifs.push({
+            id: `NOT-AUTO-BORROW-${count++}`,
+            title: "Peminjaman Aktif",
+            message: `Peminjaman Aktif: ${t.borrowerName} meminjam ${t.itemName || 'Barang'} (${t.qty || 1} Unit) - [${t.id}]`,
+            type: "warning",
+            read: false,
+            date: t.borrowDate || new Date().toISOString()
           });
         }
-      });
-    }
+      }
+    });
 
     // Preserve manual notifications if any, merging them
     const currentNotifs = JSON.parse(localStorage.getItem(NOTIFICATIONS_KEY) || "[]");

@@ -50,6 +50,7 @@ export function showConfirm(title, message, onConfirm, isDanger = true) {
   const msgEl = document.getElementById('confirm-modal-message');
   const cancelBtn = document.getElementById('confirm-modal-cancel');
   const confirmBtn = document.getElementById('confirm-modal-confirm');
+  const closeBtn = document.getElementById('confirm-modal-close');
   const iconContainer = document.getElementById('confirm-modal-icon-container');
   const iconEl = document.getElementById('confirm-modal-icon');
 
@@ -73,6 +74,8 @@ export function showConfirm(title, message, onConfirm, isDanger = true) {
 
   modal.classList.remove('hidden');
 
+  const closeModal = () => modal.classList.add('hidden');
+
   // Clean listeners
   const newConfirmBtn = confirmBtn.cloneNode(true);
   const newCancelBtn = cancelBtn.cloneNode(true);
@@ -80,13 +83,19 @@ export function showConfirm(title, message, onConfirm, isDanger = true) {
   cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
 
   newConfirmBtn.addEventListener('click', () => {
-    modal.classList.add('hidden');
+    closeModal();
     onConfirm();
   });
 
-  newCancelBtn.addEventListener('click', () => {
-    modal.classList.add('hidden');
-  });
+  newCancelBtn.addEventListener('click', closeModal);
+
+  if (closeBtn) {
+    closeBtn.onclick = closeModal;
+  }
+
+  modal.onclick = (e) => {
+    if (e.target === modal) closeModal();
+  };
 }
 
 // Print QR Code & Barcode Modal
@@ -190,4 +199,31 @@ export function exportToPDF() {
   setTimeout(() => {
     document.body.classList.remove('printing-report');
   }, 1000);
+}
+
+// Image Viewer Modal Lightbox
+export function showImagePreview(src, title = "Preview Foto Bukti") {
+  const modal = document.getElementById('image-preview-modal');
+  const imgEl = document.getElementById('image-preview-img');
+  const titleEl = document.getElementById('image-preview-title');
+  const closeBtn = document.getElementById('image-preview-close');
+
+  if (!modal || !imgEl) return;
+
+  imgEl.src = src;
+  if (titleEl) titleEl.textContent = title;
+  modal.classList.remove('hidden');
+
+  if (window.lucide) window.lucide.createIcons();
+
+  const closeModal = () => modal.classList.add('hidden');
+  if (closeBtn) closeBtn.onclick = closeModal;
+
+  modal.onclick = (e) => {
+    if (e.target === modal) closeModal();
+  };
+}
+
+if (typeof window !== 'undefined') {
+  window.showImagePreview = showImagePreview;
 }

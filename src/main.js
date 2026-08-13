@@ -238,8 +238,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sidebarLogout) sidebarLogout.onclick = logoutAction;
   if (profileLogout) profileLogout.onclick = logoutAction;
 
-  // Initialize notifications badge count
+  // Refresh notifications on startup
+  state.refreshNotifications();
   updateNotificationsBadge();
+
+  if (typeof window !== 'undefined') {
+    window.updateNotificationsBadge = updateNotificationsBadge;
+  }
 
   // Helper updates
   function updateHeaderUserProfile(user) {
@@ -253,6 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateNotificationsBadge() {
+    state.refreshNotifications();
     const unreadCount = state.getNotifications().filter(n => !n.read).length;
     const badge = document.getElementById('notification-count');
     if (badge) {

@@ -149,6 +149,7 @@ export const router = {
     }
 
     this.renderActiveView();
+    if (typeof window.updateNotificationsBadge === 'function') window.updateNotificationsBadge();
   },
 
   renderActiveView() {
@@ -1558,7 +1559,6 @@ export const router = {
   // ==========================================
   renderPeminjaman(container) {
     const inventory = state.getInventory().filter(i => i.status === "Aktif");
-    const generatedTrxId = state.generateTransactionId();
     const currentUser = state.getCurrentUser().user;
     const isPeminjam = currentUser.role === "Peminjam";
 
@@ -1590,22 +1590,10 @@ export const router = {
       `;
     }
 
-    let purposeFieldHtml = '';
-    if (isPeminjam) {
-      purposeFieldHtml = `
-        <label for="borrow-purpose">Keperluan *</label>
-        <select id="borrow-purpose" required>
-          <option value="">Pilih Keperluan</option>
-          <option value="Dinas">Dinas</option>
-          <option value="Liputan">Liputan</option>
-        </select>
-      `;
-    } else {
-      purposeFieldHtml = `
-        <label for="borrow-purpose">Tujuan Peminjaman *</label>
-        <input type="text" id="borrow-purpose" class="form-control" placeholder="Tuliskan tujuan peminjaman secara jelas..." required style="width:100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; background: var(--bg-card); color: var(--text-main);" />
-      `;
-    }
+    let purposeFieldHtml = `
+      <label for="borrow-purpose">Keperluan *</label>
+      <input type="text" id="borrow-purpose" placeholder="Ketikkan keperluan peminjaman secara jelas..." required style="width:100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; background: var(--bg-card); color: var(--text-main);" />
+    `;
 
     container.innerHTML = `
       <div class="view-header">
@@ -1622,11 +1610,6 @@ export const router = {
             <i data-lucide="user" style="color:var(--primary);"></i> Informasi Peminjam
           </h3>
           <div class="form-grid">
-            <div class="form-group">
-              <label for="borrow-trx-id">ID Transaksi (Auto Generated)</label>
-              <input type="text" id="borrow-trx-id" value="${generatedTrxId}" disabled />
-            </div>
-
             <div class="form-group">
               <label for="borrower-name">Nama Peminjam *</label>
               <input type="text" id="borrower-name" placeholder="Nama lengkap pegawai" required />
@@ -1697,8 +1680,8 @@ export const router = {
           </h3>
           <div class="file-upload-wrapper" id="borrow-evidence-wrapper" style="border: 2px dashed var(--border-color); border-radius: 8px; padding: 20px; text-align: center; background: var(--bg-card); cursor: pointer; transition: border-color 0.2s;">
             <input type="file" id="borrow-evidence" accept="image/*" style="display:none;" />
-            <div id="borrow-evidence-preview-container" style="display:none; margin-bottom: 12px; position: relative; max-width: 200px; margin-left: auto; margin-right: auto;">
-              <img id="borrow-evidence-preview" src="" style="width:100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-height: 150px; object-fit: cover;" />
+            <div id="borrow-evidence-preview-container" style="display:none; margin-bottom: 12px; position: relative; max-width: 280px; margin-left: auto; margin-right: auto;">
+              <img id="borrow-evidence-preview" src="" style="max-width:100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-height: 200px; object-fit: contain; display: block; margin: 0 auto;" />
               <button type="button" id="btn-remove-borrow-evidence" style="position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">&times;</button>
             </div>
             <div id="borrow-evidence-placeholder">
@@ -2033,6 +2016,7 @@ export const router = {
       try {
         state.borrowItem(borrowData);
         showToast("Registrasi peminjaman multi-item berhasil disimpan!", "success");
+        if (typeof window.updateNotificationsBadge === 'function') window.updateNotificationsBadge();
         if (isPeminjam) {
           this.navigate('pengembalian');
           window.location.hash = '#pengembalian';
@@ -2131,8 +2115,8 @@ export const router = {
               <label>Unggah Bukti Pengembalian (Evidence - Foto Kondisi Aset Saat Kembali)</label>
               <div class="file-upload-wrapper" id="return-evidence-wrapper" style="border: 2px dashed var(--border-color); border-radius: 8px; padding: 20px; text-align: center; background: var(--bg-card); cursor: pointer; transition: border-color 0.2s;">
                 <input type="file" id="return-evidence" accept="image/*" style="display:none;" />
-                <div id="return-evidence-preview-container" style="display:none; margin-bottom: 12px; position: relative; max-width: 200px; margin-left: auto; margin-right: auto;">
-                  <img id="return-evidence-preview" src="" style="width:100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-height: 150px; object-fit: cover;" />
+                <div id="return-evidence-preview-container" style="display:none; margin-bottom: 12px; position: relative; max-width: 280px; margin-left: auto; margin-right: auto;">
+                  <img id="return-evidence-preview" src="" style="max-width:100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-height: 200px; object-fit: contain; display: block; margin: 0 auto;" />
                   <button type="button" id="btn-remove-return-evidence" style="position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">&times;</button>
                 </div>
                 <div id="return-evidence-placeholder">
@@ -2285,6 +2269,7 @@ export const router = {
       try {
         state.returnItem(trxId, returnData);
         showToast("Pengembalian barang berhasil dicatat. Stok fisik dipulihkan.", "success");
+        if (typeof window.updateNotificationsBadge === 'function') window.updateNotificationsBadge();
         this.navigate('riwayat-transaksi');
         window.location.hash = '#riwayat-transaksi';
       } catch (err) {
@@ -2547,8 +2532,8 @@ export const router = {
               <div>
                 <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Bukti Peminjaman:</p>
                 ${t.evidenceUrl ? `
-                  <div style="border:1px solid var(--border-color); border-radius:6px; overflow:hidden; cursor:pointer;" onclick="const w=window.open(); w.document.write('<img src=\x22'+this.querySelector('img').src+'\x22 style=\x22max-width:100%;\x22 />');">
-                    <img src="${t.evidenceUrl}" style="width:100%; height:100px; object-fit:cover; display:block;" />
+                  <div style="border:1px solid var(--border-color); border-radius:8px; overflow:hidden; cursor:pointer; position:relative; background:var(--bg-app); min-height:160px; max-height:240px; display:flex; align-items:center; justify-content:center; padding:8px;" onclick="window.showImagePreview('${t.evidenceUrl}', 'Bukti Peminjaman (${t.id})')" title="Klik untuk memperbesar foto">
+                    <img src="${t.evidenceUrl}" style="max-width:100%; max-height:220px; width:auto; height:auto; object-fit:contain; display:block; margin:0 auto; border-radius:4px;" />
                   </div>
                 ` : `
                   <div style="border: 1px dashed var(--border-color); border-radius: 6px; padding: 24px 12px; text-align: center; color: var(--text-muted); font-size: 0.75rem;">
@@ -2560,8 +2545,8 @@ export const router = {
               <div>
                 <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Bukti Pengembalian:</p>
                 ${t.returnEvidenceUrl ? `
-                  <div style="border:1px solid var(--border-color); border-radius:6px; overflow:hidden; cursor:pointer;" onclick="const w=window.open(); w.document.write('<img src=\x22'+this.querySelector('img').src+'\x22 style=\x22max-width:100%;\x22 />');">
-                    <img src="${t.returnEvidenceUrl}" style="width:100%; height:100px; object-fit:cover; display:block;" />
+                  <div style="border:1px solid var(--border-color); border-radius:8px; overflow:hidden; cursor:pointer; position:relative; background:var(--bg-app); min-height:160px; max-height:240px; display:flex; align-items:center; justify-content:center; padding:8px;" onclick="window.showImagePreview('${t.returnEvidenceUrl}', 'Bukti Pengembalian (${t.id})')" title="Klik untuk memperbesar foto">
+                    <img src="${t.returnEvidenceUrl}" style="max-width:100%; max-height:220px; width:auto; height:auto; object-fit:contain; display:block; margin:0 auto; border-radius:4px;" />
                   </div>
                 ` : `
                   <div style="border: 1px dashed var(--border-color); border-radius: 6px; padding: 24px 12px; text-align: center; color: var(--text-muted); font-size: 0.75rem;">
@@ -2575,11 +2560,24 @@ export const router = {
         </div>
       `;
 
-      showConfirm(`Transaksi ${t.id}`, "", () => {}, false);
-      const msgEl = document.getElementById('confirm-modal-message');
-      if (msgEl) {
-        msgEl.innerHTML = detailHtml;
+      const detailModal = document.getElementById('detail-modal');
+      const detailTitle = document.getElementById('detail-modal-title');
+      const detailBody = document.getElementById('detail-modal-body');
+      const closeBtn1 = document.getElementById('detail-modal-close');
+      const closeBtn2 = document.getElementById('detail-modal-close-btn');
+
+      if (detailModal && detailBody) {
+        if (detailTitle) detailTitle.textContent = `Detail Transaksi: ${t.id}`;
+        detailBody.innerHTML = detailHtml;
+        detailModal.classList.remove('hidden');
         if (window.lucide) window.lucide.createIcons();
+
+        const closeModal = () => detailModal.classList.add('hidden');
+        if (closeBtn1) closeBtn1.onclick = closeModal;
+        if (closeBtn2) closeBtn2.onclick = closeModal;
+        detailModal.onclick = (e) => {
+          if (e.target === detailModal) closeModal();
+        };
       }
     };
 
